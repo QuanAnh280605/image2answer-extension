@@ -1,0 +1,48 @@
+{
+    "manifest_version": 3,
+    "name": "AI Answer",
+    "version": "1.1.0",
+    "description": "Chụp màn hình và nhận câu trả lời từ AI",
+    "permissions": [
+        "activeTab",
+        "storage",
+        "tabs",
+        "contextMenus",
+        "scripting"
+    ],
+    "host_permissions": [
+        "http://localhost:8000/*",
+        "<all_urls>"
+    ],
+    "action": {
+        "default_popup": "popup.html",
+        "default_icon": {
+            "16": "icons/icon16.svg",
+            "48": "icons/icon48.svg",
+            "128": "icons/icon128.svg"
+        }
+    },
+    "options_page": "options.html",
+    "background": {
+        "service_worker": "background.js",
+        "type": "module"
+    },
+    "content_scripts": [
+        {
+            "matches": [
+                "<all_urls>"
+            ],
+            "js": [
+                "content.js"
+            ],
+            "css": [
+                "content.css"
+            ]
+        }
+    ],
+    "icons": {
+        "16": "icons/icon16.svg",
+        "48": "icons/icon48.svg",
+        "128": "icons/icon128.svg"
+    }
+}

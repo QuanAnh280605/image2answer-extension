@@ -1,0 +1,202 @@
+/* Options Page Styles */
+
+:root {
+    --bg-primary: #1a1a2e;
+    --bg-secondary: #16213e;
+    --bg-card: #0f3460;
+    --text-primary: #eaeaea;
+    --text-secondary: #a0a0a0;
+    --accent: #e94560;
+    --success: #4ecca3;
+    --border-radius: 12px;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    min-height: 100vh;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+    color: var(--text-primary);
+    padding: 40px 20px;
+}
+
+.container {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.header {
+    text-align: center;
+    margin-bottom: 32px;
+}
+
+.header h1 {
+    font-size: 28px;
+    background: linear-gradient(90deg, var(--accent), var(--success));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.section {
+    background: var(--bg-card);
+    padding: 24px;
+    border-radius: var(--border-radius);
+    margin-bottom: 24px;
+}
+
+.section h2 {
+    font-size: 18px;
+    margin-bottom: 8px;
+    color: var(--accent);
+}
+
+.section .hint {
+    font-size: 14px;
+    color: var(--text-secondary);
+    margin-bottom: 20px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 12px 16px;
+    background: var(--bg-secondary);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    color: var(--text-primary);
+    font-size: 14px;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: var(--accent);
+}
+
+.help-link {
+    display: inline-block;
+    margin-top: 6px;
+    font-size: 12px;
+    color: var(--success);
+    text-decoration: none;
+}
+
+.help-link:hover {
+    text-decoration: underline;
+}
+
+.actions {
+    text-align: center;
+}
+
+.btn {
+    padding: 14px 32px;
+    border: none;
+    border-radius: var(--border-radius);
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--accent) 0%, #c44569 100%);
+    color: white;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(233, 69, 96, 0.4);
+}
+
+.message {
+    margin-top: 20px;
+    padding: 12px 16px;
+    border-radius: 8px;
+    text-align: center;
+    font-size: 14px;
+}
+
+.message.success {
+    background: rgba(78, 204, 163, 0.2);
+    border: 1px solid var(--success);
+    color: var(--success);
+}
+
+.message.error {
+    background: rgba(255, 71, 87, 0.2);
+    border: 1px solid #ff4757;
+    color: #ff4757;
+}
+
+.hidden {
+    display: none;
+}
+
+/* Textarea for multiple keys */
+textarea {
+    width: 100%;
+    padding: 12px 16px;
+    background: var(--bg-secondary);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    color: var(--text-primary);
+    font-size: 13px;
+    font-family: monospace;
+    resize: vertical;
+    min-height: 60px;
+}
+
+textarea:focus {
+    outline: none;
+    border-color: var(--accent);
+}
+
+textarea::placeholder {
+    color: #666;
+}
+
+/* Key status */
+.key-status {
+    margin-top: 20px;
+    padding: 16px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    font-size: 13px;
+}
+
+.key-status h3 {
+    margin: 0 0 12px 0;
+    color: var(--accent);
+    font-size: 14px;
+}
+
+.key-status ul {
+    margin: 0;
+    padding-left: 20px;
+}
+
+.key-status li {
+    margin: 6px 0;
+    color: var(--text-secondary);
+}
+
+.key-status .no-key {
+    color: #ff6b6b;
+}

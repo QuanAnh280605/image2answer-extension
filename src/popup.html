@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Answer</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+
+<body>
+  <div class="container">
+    <header class="header">
+      <h1>🤖 AI Answer</h1>
+      <a href="options.html" target="_blank" class="settings-btn" title="Cài đặt">⚙️</a>
+    </header>
+
+    <div class="actions">
+      <button id="captureBtn" class="btn btn-primary">
+        📸 Chụp màn hình
+      </button>
+      <button id="analyzeBtn" class="btn btn-success" disabled>
+        🔍 Lấy đáp án
+      </button>
+    </div>
+
+    <div id="preview" class="preview hidden">
+      <img id="previewImg" alt="Xem trước ảnh chụp">
+    </div>
+
+    <div id="result" class="result hidden">
+      <h3>📝 Đáp án:</h3>
+      <div id="answer" class="answer"></div>
+    </div>
+
+    <div id="error" class="error hidden"></div>
+    <div id="loading" class="loading hidden">
+      <div class="spinner"></div>
+      <span>Đang xử lý...</span>
+    </div>
+  </div>
+
+  <script src="popup.js" type="module"></script>
+</body>
+
+</html>

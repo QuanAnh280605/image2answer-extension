@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Answer - Cài đặt</title>
+    <link rel="stylesheet" href="options.css">
+</head>
+
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>⚙️ Cài đặt AI Answer</h1>
+        </header>
+
+        <form id="settingsForm">
+            <!-- Backend settings -->
+            <div class="section">
+                <h2>🌐 Kết nối Backend</h2>
+                <div class="form-group">
+                    <label for="backendUrl">Backend URL</label>
+                    <div style="display: flex; gap: 8px;">
+                        <input type="text" id="backendUrl" value="http://localhost:8000" style="flex: 1;" placeholder="http://localhost:8000">
+                        <button type="button" id="testConnBtn" class="btn">Kiểm tra kết nối</button>
+                    </div>
+                    <small><i>Chạy extension backend server để bắt đầu kết nối. Mọi request sẽ sử dụng Gemini API.</i></small>
+                </div>
+            </div>
+
+            <div class="actions">
+                <button type="submit" class="btn btn-primary">💾 Lưu cài đặt</button>
+            </div>
+
+            <div id="message" class="message hidden"></div>
+            <div id="statusIndicator" class="key-status" style="margin-top: 15px;"></div>
+        </form>
+    </div>
+
+    <script src="options.js" type="module"></script>
+</body>
+
+</html>

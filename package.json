@@ -1,0 +1,19 @@
+{
+    "name": "ai-answer-extension",
+    "version": "1.0.0",
+    "description": "Chrome Extension to capture screenshots and get AI answers",
+    "type": "module",
+    "scripts": {
+        "dev": "vite build --watch",
+        "build": "vite build",
+        "preview": "vite preview"
+    },
+    "devDependencies": {
+        "@types/chrome": "^0.0.260",
+        "typescript": "^5.3.3",
+        "vite": "^5.0.12"
+    },
+    "dependencies": {
+        "marked": "^17.0.1"
+    }
+}

@@ -1,0 +1,10 @@
+fastapi
+uvicorn
+python-dotenv
+requests
+pydantic
+pytz
+tavily-python
+google-genai
+anyio
+httpx
