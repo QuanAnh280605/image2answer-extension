@@ -1,93 +1,133 @@
 # AI Answer Extension
 
-Đây là tiện ích mở rộng (Chrome/Edge Extension) giúp chụp ảnh màn hình và nhận câu trả lời từ AI. Dự án hoạt động theo mô hình Client-Server, trong đó Extension (Client) sẽ giao tiếp với một Backend nội bộ (Server) được viết bằng Python.
+Tiện ích mở rộng Chrome/Edge giúp **chụp ảnh màn hình** và nhận **câu trả lời từ AI** tự động. Hoạt động theo mô hình Client–Server: Extension giao tiếp với Backend Python để xử lý ảnh và gọi AI.
+
+---
 
 ## Cấu trúc dự án
-- **Root (`/`)**: Mã nguồn Frontend của tiện ích mở rộng (được xây dựng bằng Vite, TypeScript).
-- **`backend/`**: Mã nguồn Backend API AI (được xây dựng bằng Python, FastAPI, xử lý các mô hình AI như Gemini, OpenAI, Claude).
+
+```
+cheat-extension/
+├── src/                    # Extension Frontend (TypeScript + Vite)
+│   ├── popup.ts/html/css   # Popup chính của extension
+│   ├── content.ts/css      # Content script chạy trên trang web
+│   ├── background.ts       # Service worker của extension
+│   └── options.ts/html/css # Trang cài đặt
+├── backend/                # Backend Python (FastAPI)
+│   ├── main.py             # Entry point, định nghĩa API routes
+│   ├── vision_service.py   # Gọi Gemini Vision API để OCR ảnh
+│   ├── requirements.txt
+│   ├── .env                # Chứa API keys (không commit lên git)
+│   └── agent/
+│       ├── core.py         # Agent logic + API Key Queue
+│       ├── tools.py        # Tools: calculate, search_web, get_time
+│       └── prompts.py      # System prompts
+└── dist/                   # Extension đã build (load vào trình duyệt)
+```
+
+---
+
+## Luồng xử lý
+
+```
+Extension (chụp ảnh)
+    → POST /analyze (base64 image)
+    → vision_service.py  →  Gemini Vision API  (OCR text từ ảnh)
+    → Agent (core.py)    →  Gemini Flash       (suy luận + gọi tools)
+    → Trả kết quả về Extension
+```
 
 ---
 
 ## 1. Yêu cầu hệ thống
 
-Trước khi bắt đầu, hãy đảm bảo máy tính của bạn đã cài đặt:
-- **Node.js** (Phiên bản 18 trở lên) để build Extension.
-- **Python** (Phiên bản 3.8 trở lên) để chạy Server backend.
-- Cấu hình **API Keys** hợp lệ (Google Gemini / OpenAI / Anthropic).
+- **Node.js** ≥ 18 (để build Extension)
+- **Python** ≥ 3.8 (để chạy Backend)
+- **Google Gemini API Key** (bắt buộc) – lấy tại [aistudio.google.com](https://aistudio.google.com)
+- *(Tùy chọn)* **Tavily API Key** – nếu dùng tính năng tìm kiếm web
 
 ---
 
-## 2. Hướng dẫn cài đặt và chạy Backend (Python API)
+## 2. Cài đặt & Chạy Backend
 
-Backend có nhiệm vụ tiếp nhận yêu cầu từ extension, giao tiếp với các mô hình ngôn ngữ lớn (LLM) và trả về kết quả.
+### 2.1. Tạo môi trường ảo và cài thư viện
 
-1. **Di chuyển vào thư mục backend:**
-   ```bash
-   cd backend
-   ```
+```bash
+cd backend
 
-2. **(Tùy chọn) Tạo và kích hoạt môi trường ảo (Virtual Environment):**
-   ```bash
-   python -m venv .venv
-   
-   # Windows
-   .venv\Scripts\activate
-   # macOS/Linux
-   source .venv/bin/activate
-   ```
+python -m venv .venv
 
-3. **Cài đặt các thư viện phụ thuộc:**
-   ```bash
-   pip install -r requirements.txt
-   ```
+# Windows
+.venv\Scripts\activate
+# macOS/Linux
+source .venv/bin/activate
 
-4. **Thiết lập biến môi trường (.env):**
-   - Đảm bảo bạn đã có tệp `.env` bên trong thư mục `backend/` với các thông tin API keys, ví dụ:
-     ```env
-     GEMINI_API_KEY=your_gemini_api_key_here
-     # (Thêm các key khác nếu có)
-     ```
+pip install -r requirements.txt
+```
 
-5. **Khởi chạy Server Backend:**
-   ```bash
-   uvicorn main:app --host 0.0.0.0 --port 8000 --reload
-   ```
-   *Server sẽ chạy ở địa chỉ `http://localhost:8000`.*
+### 2.2. Cấu hình API Keys (`.env`)
 
----
+Tạo file `backend/.env` dựa theo `.env.example`:
 
-## 3. Hướng dẫn Build Extension (Frontend Vite)
+```env
+# === BẮT BUỘC ===
+GEMINI_API_KEY=AIzaSy...key_chinh...
 
-1. **Từ thư mục gốc (root) của dự án, cài đặt dependencies:**
-   ```bash
-   npm install
-   ```
+# === NHIỀU KEY GEMINI (tránh giới hạn RPM) ===
+# Agent sẽ luân phiên dùng các key này tự động
+GEMINI_API_KEY_1=AIzaSy...key_2...
+GEMINI_API_KEY_2=AIzaSy...key_3...
+# Thêm bao nhiêu key tùy ý (GEMINI_API_KEY_3, _4, ...)
 
-2. **Biên dịch mã nguồn (Build Extension):**
-   ```bash
-   # Dùng lệnh này để build ra sản phẩm dùng trực tiếp
-   npm run build
-   
-   # HOẶC, nếu bạn đang dev và muốn code tự reload khi lưu:
-   npm run dev
-   ```
-   *Sau khi build thành công, mã nguồn extension sẽ nằm ở thư mục `dist/`.*
+# === TÙY CHỌN ===
+TAVILY_API_KEY=tvly-...   # Dùng tool tìm kiếm web
+```
+
+> **Lưu ý về API Key Queue:** Agent sẽ tự động phát hiện tất cả key có dạng `GEMINI_API_KEY`, `GEMINI_API_KEY_1`, `GEMINI_API_KEY_2`,... và dùng luân phiên sau mỗi lần gọi, giúp tránh lỗi **429 Too Many Requests** của Google.
+
+### 2.3. Khởi chạy Server
+
+```bash
+# Từ thư mục backend/
+uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+```
+
+Server chạy tại: `http://localhost:8000`
+
+**API Endpoints:**
+
+| Method | Endpoint   | Mô tả                            |
+|--------|------------|----------------------------------|
+| GET    | `/health`  | Kiểm tra server đang hoạt động   |
+| POST   | `/analyze` | Nhận ảnh base64, trả lời từ AI   |
 
 ---
 
-## 4. Hướng dẫn cài đặt Extension lên trình duyệt (Chrome/Edge)
+## 3. Build Extension (Frontend)
 
-1. Mở trình duyệt và truy cập trang quản lý extension:
-   - **Chrome**: `chrome://extensions/`
-   - **Edge**: `edge://extensions/`
-2. Bật chế độ **Developer mode** (Chế độ dành cho nhà phát triển) ở góc trên bên phải.
-3. Nhấn vào nút **Load unpacked** (Tải tiện ích đã giải nén).
-4. Chọn thư mục `dist` nằm trong thư mục gốc của dự án này.
-5. Cấp quyền hoặc ghim Extension trên thanh công cụ để dễ dàng sử dụng.
+```bash
+# Từ thư mục root của dự án
+npm install
+
+# Build production (tạo thư mục dist/)
+npm run build
+```
 
 ---
 
-## 5. Hướng dẫn sử dụng
+## 4. Cài Extension lên trình duyệt
 
-1. **Test kết nối:** Khi mở Extension, hãy vào phần Cài đặt và nhấn nút **Test Connection** để đảm bảo Frontend đã kết nối thành công với Backend (đang chạy ở port 8000).
-2. **Sử dụng AI:** Sau khi kết nối thành công, bạn có thể sử dụng các chức năng của extension (chụp màn hình, gửi ảnh/câu hỏi lên AI) ngay trên các trang web mong muốn. Backend sẽ xử lý và trả về câu trả lời.
+1. Mở trình duyệt, truy cập:
+   - Chrome: `chrome://extensions/`
+   - Edge: `edge://extensions/`
+2. Bật **Developer mode** (góc trên phải).
+3. Nhấn **Load unpacked** → chọn thư mục `dist/`.
+4. Ghim Extension lên thanh công cụ.
+
+---
+
+## 5. Sử dụng
+
+1. **Kiểm tra kết nối:** Mở extension → vào **Settings** → nhấn **Test Connection**.  
+   Đảm bảo backend đang chạy ở `http://localhost:8000`.
+2. **Phân tích ảnh:** Chụp màn hình hoặc chọn vùng → Extension gửi ảnh lên backend → AI trả lời.
